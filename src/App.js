@@ -2,8 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import { ethers } from "ethers";
 import Wallet from "./pages/Wallet";
-import Networks from "./pages/Networks";
 import Header from "./components/Header";
+import ChainsPage from "./pages/ChainsPage";
 
 function App() {
   const [defaultAccount, setDefaultAccount] = useState(null);
@@ -55,7 +55,7 @@ function App() {
             />
           }
         />
-        <Route path="networks" element={<Networks />} />
+        <Route path="networks" element={<ChainsPage />} />
       </Route>
     </Routes>
   );
