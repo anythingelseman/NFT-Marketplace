@@ -1,23 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import ChainItem from "../components/ChainItem";
 
-const ChainsPage = () => {
-  const [chains, setChains] = useState([]);
-  const [searchedChains, setSearchedChains] = useState([]);
+const ChainsPage = (props) => {
+  const [searchedChains, setSearchedChains] = useState(props.chains);
   const inputRef = useRef();
 
-  useEffect(() => {
-    const fetchChains = async () => {
-      const response = await fetch("https://chainid.network/chains.json");
-      const responseData = await response.json();
-      setChains(responseData);
-      setSearchedChains(responseData);
-    };
-    fetchChains();
-  }, []);
-
   const searchHandler = () => {
-    const a = chains.filter((chain) =>
+    const a = props.chains.filter((chain) =>
       chain.name.toLowerCase().includes(inputRef.current.value.toLowerCase())
     );
     setSearchedChains(a);
@@ -33,7 +22,7 @@ const ChainsPage = () => {
   ));
 
   return (
-    <div>
+    <div className=" bg-gradient-to-br from-purple-800 to-purple-600 w-full ">
       <input type="text" ref={inputRef} onChange={searchHandler} />
       <ul>
         <li>{chainLists}</li>

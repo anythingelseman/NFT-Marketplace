@@ -24,17 +24,35 @@ const TransitionForm = (props) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
+      <div className="mt-14 mx-auto bg-purple-900 w-fit p-5 rounded-md">
+        <h1 className="text-center text-2xl font-bold text-orange-500 mb-5">
+          Transition Form
+        </h1>
         <div>
-          <div>
-            <input type="text" name="addr" placeholder="Recipient Address" />
-          </div>
-          <div>
-            <input name="ether" type="text" placeholder="Amount in ETH" />
-          </div>
-        </div>
+          <input
+            type="text"
+            name="addr"
+            placeholder="Recipient Address"
+            className="w-96 mb-5 rounded-lg p-4"
+          />
 
-        <button type="submit">Pay now</button>
+          <br />
+
+          <input
+            name="ether"
+            type="text"
+            placeholder="Amount"
+            className="w-96 rounded-lg p-4 mb-5"
+          />
+        </div>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-orange-500 p-2 mt-3 text-white rounded-lg text-xl hover:bg-orange-600 "
+          >
+            Pay now
+          </button>
+        </div>
       </div>
     </form>
   );
