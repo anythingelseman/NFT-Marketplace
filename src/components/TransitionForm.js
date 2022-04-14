@@ -1,6 +1,10 @@
 import { ethers } from "ethers";
+import { useRef } from "react";
 
 const TransitionForm = (props) => {
+  const amountInputRef = useRef();
+  const addrInputRef = useRef();
+
   const startPayment = async ({ ether, addr }) => {
     await window.ethereum.send("eth_requestAccounts");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -10,6 +14,8 @@ const TransitionForm = (props) => {
       to: addr,
       value: ethers.utils.parseEther(ether),
     });
+    amountInputRef.current.value = "";
+    addrInputRef.current.value = "";
   };
 
   const handleSubmit = async (e) => {
@@ -26,7 +32,7 @@ const TransitionForm = (props) => {
     <form onSubmit={handleSubmit}>
       <div className="mt-14 mx-auto bg-purple-900 w-fit p-5 rounded-md">
         <h1 className="text-center text-2xl font-bold text-orange-500 mb-5">
-          Transition Form
+          Transaction Form
         </h1>
         <div>
           <input
@@ -34,6 +40,7 @@ const TransitionForm = (props) => {
             name="addr"
             placeholder="Recipient Address"
             className="w-96 mb-5 rounded-lg p-4"
+            ref={addrInputRef}
           />
 
           <br />
@@ -43,6 +50,7 @@ const TransitionForm = (props) => {
             type="text"
             placeholder="Amount"
             className="w-96 rounded-lg p-4 mb-5"
+            ref={amountInputRef}
           />
         </div>
         <div className="flex justify-center">

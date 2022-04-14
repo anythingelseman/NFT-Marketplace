@@ -14,7 +14,7 @@ const Header = (props) => {
               : "text-white opacity-30 mr-10 hover:opacity-100"
           }
         >
-          Transition
+          Wallet
         </NavLink>
 
         <NavLink

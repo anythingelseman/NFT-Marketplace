@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import Wallet from "./pages/Wallet";
+import WalletPage from "./pages/WalletPage";
 import Header from "./components/Header";
 import ChainsPage from "./pages/ChainsPage";
 
@@ -24,7 +24,7 @@ function App() {
 
   const getCurrencyAndChainName = () => {
     const chain = chains.find(
-      (chain) => chain.chainId == parseInt(window.ethereum.chainId, 16)
+      (chain) => chain.chainId === parseInt(window.ethereum.chainId, 16)
     );
     setChainName(chain.name);
     setCurrency(chain.nativeCurrency.symbol);
@@ -63,9 +63,11 @@ function App() {
     getCurrencyAndChainName();
   };
 
-  window.ethereum.on("accountsChanged", accountChangedHandler);
+  if (window.ethereum && window.ethereum.isMetaMask)
+    window.ethereum.on("accountsChanged", accountChangedHandler);
 
-  window.ethereum.on("chainChanged", chainChangedHandler);
+  if (window.ethereum && window.ethereum.isMetaMask)
+    window.ethereum.on("chainChanged", chainChangedHandler);
 
   return (
     <div className="h-screen bg-gradient-to-br from-purple-800 to-purple-600 w-full ">
@@ -74,7 +76,7 @@ function App() {
           <Route
             index
             element={
-              <Wallet
+              <WalletPage
                 defaultAccount={defaultAccount}
                 userBalance={userBalance}
                 connectWalletHandler={connectWalletHandler}
@@ -84,7 +86,23 @@ function App() {
               />
             }
           />
-          <Route path="networks" element={<ChainsPage chains={chains} />} />
+          <Route
+            path="networks"
+            element={
+              defaultAccount ? (
+                <ChainsPage chains={chains} />
+              ) : (
+                <WalletPage
+                  defaultAccount={defaultAccount}
+                  userBalance={userBalance}
+                  connectWalletHandler={connectWalletHandler}
+                  chainId={chainId}
+                  currency={currency}
+                  chainName={chainName}
+                />
+              )
+            }
+          />
         </Route>
       </Routes>
     </div>
