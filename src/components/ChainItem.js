@@ -1,17 +1,23 @@
+import toast from "react-hot-toast";
+
 const ChainItem = (props) => {
   const { chainId, name, nativeCurrency, rpcUrls } = props;
   const changeNetwork = async () => {
-    await window.ethereum.request({
-      method: "wallet_addEthereumChain",
-      params: [
-        {
-          chainId: `0x${chainId.toString(16)}`,
-          chainName: name,
-          nativeCurrency,
-          rpcUrls,
-        },
-      ],
-    });
+    try {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: `0x${chainId.toString(16)}`,
+            chainName: name,
+            nativeCurrency,
+            rpcUrls,
+          },
+        ],
+      });
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
   return (
     <div className="h-60 w-60 bg-purple-900 rounded-xl m-2 p-2 flex flex-col justify-center">

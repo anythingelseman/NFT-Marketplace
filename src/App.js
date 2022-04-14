@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import WalletPage from "./pages/WalletPage";
 import Header from "./components/Header";
 import ChainsPage from "./pages/ChainsPage";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const [defaultAccount, setDefaultAccount] = useState(null);
@@ -31,17 +32,15 @@ function App() {
   };
 
   const connectWalletHandler = () => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
-      window.ethereum
-        .request({ method: "eth_requestAccounts" })
-        .then((result) => {
-          accountChangedHandler(result[0]);
-          getAccountBalance(result[0]);
-          setChainId(parseInt(window.ethereum.chainId, 16));
-          getCurrencyAndChainName();
-        });
-    } else {
-    }
+    window.ethereum
+      .request({ method: "eth_requestAccounts" })
+      .then((result) => {
+        accountChangedHandler(result[0]);
+        getAccountBalance(result[0]);
+        setChainId(parseInt(window.ethereum.chainId, 16));
+        getCurrencyAndChainName();
+      })
+      .catch((err) => toast.error(err.message));
   };
 
   const accountChangedHandler = (newAccount) => {
@@ -54,6 +53,7 @@ function App() {
       .request({ method: "eth_getBalance", params: [account, "latest"] })
       .then((balance) => {
         setUserBalance(ethers.utils.formatEther(balance));
+        console.log(userBalance);
       });
   };
 
@@ -83,6 +83,7 @@ function App() {
                 chainId={chainId}
                 currency={currency}
                 chainName={chainName}
+                setUserBalance={setUserBalance}
               />
             }
           />
@@ -105,6 +106,7 @@ function App() {
           />
         </Route>
       </Routes>
+      <Toaster position="bottom-left" />
     </div>
   );
 }

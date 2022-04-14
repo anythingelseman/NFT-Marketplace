@@ -69,7 +69,11 @@ const WalletPage = (props) => {
         </div>
       </div>
 
-      <TransitionForm />
+      <TransitionForm
+        userBalance={props.userBalance}
+        defaultAccount={props.defaultAccount}
+        setUserBalance={props.setUserBalance}
+      />
     </div>
   );
 };

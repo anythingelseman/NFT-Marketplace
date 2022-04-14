@@ -1,21 +1,42 @@
 import { ethers } from "ethers";
 import { useRef } from "react";
+import toast from "react-hot-toast";
 
 const TransitionForm = (props) => {
   const amountInputRef = useRef();
   const addrInputRef = useRef();
 
   const startPayment = async ({ ether, addr }) => {
-    await window.ethereum.send("eth_requestAccounts");
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    ethers.utils.getAddress(addr);
-    const tx = await signer.sendTransaction({
-      to: addr,
-      value: ethers.utils.parseEther(ether),
-    });
-    amountInputRef.current.value = "";
-    addrInputRef.current.value = "";
+    try {
+      if (ether > props.userBalance)
+        throw Error("You don't have enough balance in your wallet");
+      await window.ethereum.send("eth_requestAccounts");
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      ethers.utils.getAddress(addr);
+      await signer
+        .sendTransaction({
+          to: addr,
+          value: ethers.utils.parseEther(ether),
+        })
+        .then((tx) => {
+          console.log(props.userBalance);
+          console.log(ethers.utils.formatEther(tx.value._hex));
+          console.log(
+            ethers.utils.formatEther(tx.gasLimit._hex) * Math.pow(10, 10)
+          );
+
+          props.setUserBalance(
+            props.userBalance -
+              ethers.utils.formatEther(tx.value._hex) -
+              ethers.utils.formatEther(tx.gasLimit._hex) * Math.pow(10, 10)
+          );
+        });
+      amountInputRef.current.value = "";
+      addrInputRef.current.value = "";
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
 
   const handleSubmit = async (e) => {
