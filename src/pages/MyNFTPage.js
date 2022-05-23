@@ -53,7 +53,7 @@ const MyNFTPage = (props) => {
     navigate(`/resell-nft?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`);
   }
 
-  if (props.chainId !== "80001")
+  if (props.chainId != "80001")
     return (
       <h1 className="text-orange-500 text-3xl text-center">
         Please change your network to Mumbai Testnet.
