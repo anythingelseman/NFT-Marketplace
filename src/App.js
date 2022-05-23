@@ -4,7 +4,12 @@ import { ethers } from "ethers";
 import WalletPage from "./pages/WalletPage";
 import Header from "./components/Header";
 import ChainsPage from "./pages/ChainsPage";
+import MintNFTPage from "./pages/MintNFTPage";
+import MarketplacePage from "./pages/MarketplacePage";
 import toast, { Toaster } from "react-hot-toast";
+import DashboardPage from "./pages/DashboardPage";
+import MyNFTPage from "./pages/MyNFTPage";
+import ResellPage from "./pages/ResellPage";
 
 function App() {
   const [defaultAccount, setDefaultAccount] = useState(null);
@@ -53,7 +58,6 @@ function App() {
       .request({ method: "eth_getBalance", params: [account, "latest"] })
       .then((balance) => {
         setUserBalance(ethers.utils.formatEther(balance));
-        console.log(userBalance);
       });
   };
 
@@ -70,21 +74,94 @@ function App() {
     window.ethereum.on("chainChanged", chainChangedHandler);
 
   return (
-    <div className="h-screen bg-gradient-to-br from-purple-800 to-purple-600 w-full ">
+    <div className=" h-screen bg-gradient-to-br from-purple-800 to-purple-600 w-full ">
       <Routes>
         <Route path="/" element={<Header defaultAccount={defaultAccount} />}>
           <Route
             index
             element={
-              <WalletPage
+              <MarketplacePage
                 defaultAccount={defaultAccount}
-                userBalance={userBalance}
                 connectWalletHandler={connectWalletHandler}
                 chainId={chainId}
-                currency={currency}
-                chainName={chainName}
-                setUserBalance={setUserBalance}
               />
+            }
+          />
+          <Route
+            path="dashboard"
+            element={
+              defaultAccount ? (
+                <DashboardPage chainId={chainId} />
+              ) : (
+                <MarketplacePage
+                  defaultAccount={defaultAccount}
+                  connectWalletHandler={connectWalletHandler}
+                  chainId={chainId}
+                />
+              )
+            }
+          />
+          <Route
+            path="my-nft"
+            element={
+              defaultAccount ? (
+                <MyNFTPage chainId={chainId} />
+              ) : (
+                <MarketplacePage
+                  defaultAccount={defaultAccount}
+                  connectWalletHandler={connectWalletHandler}
+                  chainId={chainId}
+                />
+              )
+            }
+          />
+          <Route
+            path="mint-nft"
+            element={
+              defaultAccount ? (
+                <MintNFTPage chainId={chainId} />
+              ) : (
+                <MarketplacePage
+                  defaultAccount={defaultAccount}
+                  connectWalletHandler={connectWalletHandler}
+                  chainId={chainId}
+                />
+              )
+            }
+          />
+          <Route
+            path="resell-nft"
+            element={
+              defaultAccount ? (
+                <ResellPage chainId={chainId} />
+              ) : (
+                <MarketplacePage
+                  defaultAccount={defaultAccount}
+                  connectWalletHandler={connectWalletHandler}
+                  chainId={chainId}
+                />
+              )
+            }
+          />
+          <Route
+            path="wallet"
+            element={
+              defaultAccount ? (
+                <WalletPage
+                  defaultAccount={defaultAccount}
+                  userBalance={userBalance}
+                  connectWalletHandler={connectWalletHandler}
+                  chainId={chainId}
+                  currency={currency}
+                  chainName={chainName}
+                  setUserBalance={setUserBalance}
+                />
+              ) : (
+                <MarketplacePage
+                  defaultAccount={defaultAccount}
+                  connectWalletHandler={connectWalletHandler}
+                />
+              )
             }
           />
           <Route
@@ -93,13 +170,9 @@ function App() {
               defaultAccount ? (
                 <ChainsPage chains={chains} />
               ) : (
-                <WalletPage
+                <MarketplacePage
                   defaultAccount={defaultAccount}
-                  userBalance={userBalance}
                   connectWalletHandler={connectWalletHandler}
-                  chainId={chainId}
-                  currency={currency}
-                  chainName={chainName}
                 />
               )
             }

@@ -1,32 +1,6 @@
 import TransitionForm from "../components/TransitionForm";
 
 const WalletPage = (props) => {
-  if (!(window.ethereum && window.ethereum.isMetaMask))
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <h1 className="text-orange-500 text-3xl">
-          Please install metamask first to use this website.
-        </h1>
-      </div>
-    );
-
-  if (!props.defaultAccount) {
-    return (
-      <div className="h-screen flex justify-center items-center flex-col">
-        <h1 className="text-white text-3xl">
-          Looks like you haven't connected your wallet yet.
-        </h1>
-
-        <button
-          onClick={props.connectWalletHandler}
-          className="bg-orange-500 p-2 mt-3 text-white rounded-lg text-xl hover:bg-orange-600"
-        >
-          Add a wallet
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className=" bg-gradient-to-br from-purple-800 to-purple-600 w-full ">
       <div className="flex flex-col items-center text-white lg:flex-row lg:justify-around">

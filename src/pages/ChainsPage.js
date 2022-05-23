@@ -19,6 +19,7 @@ const ChainsPage = (props) => {
       chainId={chain.chainId}
       nativeCurrency={chain.nativeCurrency}
       rpcUrls={chain.rpc}
+      infoURL={chain.infoURL}
     ></ChainItem>
   ));
 

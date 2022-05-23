@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 
 const ChainItem = (props) => {
-  const { chainId, name, nativeCurrency, rpcUrls } = props;
+  const { chainId, name, nativeCurrency, rpcUrls, infoURL } = props;
   const changeNetwork = async () => {
     try {
       await window.ethereum.request({
@@ -21,9 +21,14 @@ const ChainItem = (props) => {
   };
   return (
     <div className="h-60 w-60 bg-purple-900 rounded-xl m-2 p-2 flex flex-col justify-center">
-      <h1 className="text-center text-2xl font-bold text-orange-500 mb-5">
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href={infoURL}
+        className="text-center text-2xl font-bold text-orange-500 mb-5 hover:text-orange-700"
+      >
         {name}
-      </h1>
+      </a>
 
       <div className="flex justify-between">
         <div>
