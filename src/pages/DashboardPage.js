@@ -4,7 +4,7 @@ import axios from "axios";
 import NFTMarketplace from "../artifacts/contracts/NFTMarketplace.sol/NFTMarketplace.json";
 import toast from "react-hot-toast";
 
-const marketplaceAddress = "0x7772D1A7aaE5D53679C61Ad8C1353b2CCfA100bA";
+const marketplaceAddress = "0xf6b66dc94404C127386fA3B4D9cb3430263Ea3F7";
 
 const DashboardPage = (props) => {
   const [nfts, setNfts] = useState([]);
@@ -36,6 +36,7 @@ const DashboardPage = (props) => {
             seller: i.seller,
             owner: i.owner,
             image: meta.data.image,
+            sold: i.sold,
           };
           return item;
         })
@@ -75,10 +76,21 @@ const DashboardPage = (props) => {
                 alt={nft.description}
                 className="rounded w-[300px] h-[200px] object-contain bg-white"
               />
-              <div className="p-4 bg-purple-900">
-                <p className="text-2xl font-bold text-white">
+              <div className="p-4 bg-purple-900 w-[300px] h-[100px]">
+                <p className="text-2xl font-bold text-white ">
                   Price - {nft.price} MATIC
                 </p>
+                <div className="flex justify-center">
+                  <p
+                    className={
+                      nft.sold
+                        ? "text-xl text-red-500 font-bold"
+                        : "text-xl text-yellow-500 font-bold"
+                    }
+                  >
+                    {nft.sold ? "SOLD" : "LISTING"}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

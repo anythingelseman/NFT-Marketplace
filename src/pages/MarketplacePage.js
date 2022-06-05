@@ -4,7 +4,7 @@ import axios from "axios";
 import NFTMarketplace from "../artifacts/contracts/NFTMarketplace.sol/NFTMarketplace.json";
 import toast from "react-hot-toast";
 
-const marketplaceAddress = "0x7772D1A7aaE5D53679C61Ad8C1353b2CCfA100bA";
+const marketplaceAddress = "0xf6b66dc94404C127386fA3B4D9cb3430263Ea3F7";
 
 const MarketplacePage = (props) => {
   const [nfts, setNfts] = useState([]);

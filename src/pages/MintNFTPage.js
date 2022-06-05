@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
-const marketplaceAddress = "0x7772D1A7aaE5D53679C61Ad8C1353b2CCfA100bA";
+const marketplaceAddress = "0xf6b66dc94404C127386fA3B4D9cb3430263Ea3F7";
 
 const MintNFTPage = (props) => {
   const navigate = useNavigate();
