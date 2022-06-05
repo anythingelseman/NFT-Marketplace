@@ -13,6 +13,7 @@ const MarketplacePage = (props) => {
     loadNFTs();
   }, []);
   async function loadNFTs() {
+    if (!props.defaultAccount || props.chainId !== 80001) return;
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -96,7 +97,7 @@ const MarketplacePage = (props) => {
     );
   }
 
-  if (props.chainId != "80001")
+  if (props.chainId !== 80001)
     return (
       <h1 className="text-orange-500 text-3xl text-center">
         Please change your network to Mumbai Testnet.
