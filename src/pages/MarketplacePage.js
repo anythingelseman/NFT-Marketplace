@@ -8,46 +8,41 @@ const marketplaceAddress = "0xf6b66dc94404C127386fA3B4D9cb3430263Ea3F7";
 
 const MarketplacePage = (props) => {
   const [nfts, setNfts] = useState([]);
-  const [loadingState, setLoadingState] = useState("not-loaded");
+  const [loadingState, setLoadingState] = useState(true);
   useEffect(() => {
     loadNFTs();
   }, []);
   async function loadNFTs() {
-    if (!props.defaultAccount || props.chainId !== 80001) return;
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
 
-      const marketplaceContract = new ethers.Contract(
-        marketplaceAddress,
-        NFTMarketplace.abi,
-        signer
-      );
+    const marketplaceContract = new ethers.Contract(
+      marketplaceAddress,
+      NFTMarketplace.abi,
+      signer
+    );
 
-      const data = await marketplaceContract.fetchMarketItems();
+    const data = await marketplaceContract.fetchMarketItems();
 
-      const items = await Promise.all(
-        data.map(async (i) => {
-          const tokenUri = await marketplaceContract.tokenURI(i.tokenId);
-          const meta = await axios.get(tokenUri);
-          let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-          let item = {
-            price,
-            tokenId: i.tokenId.toNumber(),
-            seller: i.seller,
-            owner: i.owner,
-            image: meta.data.image,
-            name: meta.data.name,
-            description: meta.data.description,
-          };
-          return item;
-        })
-      );
-      setNfts(items);
-      setLoadingState("loaded");
-    } catch (err) {
-      toast.error(err.message);
-    }
+    const items = await Promise.all(
+      data.map(async (i) => {
+        const tokenUri = await marketplaceContract.tokenURI(i.tokenId);
+        const meta = await axios.get(tokenUri);
+        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        let item = {
+          price,
+          tokenId: i.tokenId.toNumber(),
+          seller: i.seller,
+          owner: i.owner,
+          image: meta.data.image,
+          name: meta.data.name,
+          description: meta.data.description,
+        };
+        return item;
+      })
+    );
+    setNfts(items);
+    setLoadingState(false);
   }
   async function buyNft(nft) {
     try {
@@ -58,9 +53,10 @@ const MarketplacePage = (props) => {
         NFTMarketplace.abi,
         signer
       );
-
-      /* user will be prompted to pay the asking proces to complete the transaction */
+      if (props.userBalance < nft.price)
+        throw Error("You don't have enough balance in your wallet");
       const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
+
       const transaction = await contract.createMarketSale(nft.tokenId, {
         value: price,
       });
@@ -104,7 +100,14 @@ const MarketplacePage = (props) => {
       </h1>
     );
 
-  if (loadingState === "loaded" && !nfts.length)
+  if (loadingState)
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <h1 className="text-orange-500 text-3xl">Fetching...</h1>
+      </div>
+    );
+
+  if (loadingState === false && !nfts.length)
     return (
       <h1 className="px-20 py-10 text-3xl text-orange-500">
         No items in marketplace
@@ -124,11 +127,11 @@ const MarketplacePage = (props) => {
               alt={nft.name}
             />
             <div className="p-4 h-[130px]">
-              <p className="text-2xl font-semibold text-orange-500">
+              <p className="text-2xl font-semibold text-orange-500 h-[30px]">
                 {nft.name}
               </p>
-              <div>
-                <p className="text-white overflow-hidden">{nft.description}</p>
+              <div className="h-[100px] text-white overflow-y-auto scrollbar-hide">
+                {nft.description}
               </div>
             </div>
             <div className="p-4 ">

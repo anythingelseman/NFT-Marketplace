@@ -46,7 +46,7 @@ const WalletPage = (props) => {
       <TransitionForm
         userBalance={props.userBalance}
         defaultAccount={props.defaultAccount}
-        setUserBalance={props.setUserBalance}
+        getAccountBalance={props.getAccountBalance}
       />
     </div>
   );

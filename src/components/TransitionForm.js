@@ -14,24 +14,12 @@ const TransitionForm = (props) => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       ethers.utils.getAddress(addr);
-      await signer
-        .sendTransaction({
-          to: addr,
-          value: ethers.utils.parseEther(ether),
-        })
-        .then((tx) => {
-          console.log(props.userBalance);
-          console.log(ethers.utils.formatEther(tx.value._hex));
-          console.log(
-            ethers.utils.formatEther(tx.gasLimit._hex) * Math.pow(10, 10)
-          );
-
-          props.setUserBalance(
-            props.userBalance -
-              ethers.utils.formatEther(tx.value._hex) -
-              ethers.utils.formatEther(tx.gasLimit._hex) * Math.pow(10, 10)
-          );
-        });
+      const transaction = await signer.sendTransaction({
+        to: addr,
+        value: ethers.utils.parseEther(ether),
+      });
+      await transaction.wait();
+      props.getAccountBalance(props.defaultAccount);
       amountInputRef.current.value = "";
       addrInputRef.current.value = "";
     } catch (err) {

@@ -3,51 +3,45 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NFTMarketplace from "../artifacts/contracts/NFTMarketplace.sol/NFTMarketplace.json";
-import toast from "react-hot-toast";
 const marketplaceAddress = "0xf6b66dc94404C127386fA3B4D9cb3430263Ea3F7";
 
 const MyNFTPage = (props) => {
   const navigate = useNavigate();
   const [nfts, setNfts] = useState([]);
-  const [loadingState, setLoadingState] = useState("not-loaded");
+  const [loadingState, setLoadingState] = useState(true);
 
   useEffect(() => {
     loadNFTs();
   }, []);
   async function loadNFTs() {
-    if (props.chainId !== 80001) return;
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
 
-      const marketplaceContract = new ethers.Contract(
-        marketplaceAddress,
-        NFTMarketplace.abi,
-        signer
-      );
-      const data = await marketplaceContract.fetchMyNFTs();
+    const marketplaceContract = new ethers.Contract(
+      marketplaceAddress,
+      NFTMarketplace.abi,
+      signer
+    );
+    const data = await marketplaceContract.fetchMyNFTs();
 
-      const items = await Promise.all(
-        data.map(async (i) => {
-          const tokenURI = await marketplaceContract.tokenURI(i.tokenId);
-          const meta = await axios.get(tokenURI);
-          let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-          let item = {
-            price,
-            tokenId: i.tokenId.toNumber(),
-            seller: i.seller,
-            owner: i.owner,
-            image: meta.data.image,
-            tokenURI,
-          };
-          return item;
-        })
-      );
-      setNfts(items);
-      setLoadingState("loaded");
-    } catch (err) {
-      toast.error(err.message);
-    }
+    const items = await Promise.all(
+      data.map(async (i) => {
+        const tokenURI = await marketplaceContract.tokenURI(i.tokenId);
+        const meta = await axios.get(tokenURI);
+        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        let item = {
+          price,
+          tokenId: i.tokenId.toNumber(),
+          seller: i.seller,
+          owner: i.owner,
+          image: meta.data.image,
+          tokenURI,
+        };
+        return item;
+      })
+    );
+    setNfts(items);
+    setLoadingState(false);
   }
   function listNFT(nft) {
     console.log("nft:", nft);
@@ -61,7 +55,14 @@ const MyNFTPage = (props) => {
       </h1>
     );
 
-  if (loadingState === "loaded" && !nfts.length)
+  if (loadingState)
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <h1 className="text-orange-500 text-3xl">Fetching...</h1>
+      </div>
+    );
+
+  if (!loadingState && !nfts.length)
     return (
       <h1 className="py-10 px-20 text-3xl text-orange-500">No NFTs owned</h1>
     );

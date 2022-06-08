@@ -73,46 +73,34 @@ function App() {
   if (window.ethereum && window.ethereum.isMetaMask)
     window.ethereum.on("chainChanged", chainChangedHandler);
 
+  const marketplacePage = (
+    <MarketplacePage
+      defaultAccount={defaultAccount}
+      connectWalletHandler={connectWalletHandler}
+      chainId={chainId}
+      userBalance={userBalance}
+    />
+  );
+
   return (
     <div className=" h-screen bg-gradient-to-br from-purple-800 to-purple-600 w-full ">
       <Routes>
         <Route path="/" element={<Header defaultAccount={defaultAccount} />}>
-          <Route
-            index
-            element={
-              <MarketplacePage
-                defaultAccount={defaultAccount}
-                connectWalletHandler={connectWalletHandler}
-                chainId={chainId}
-              />
-            }
-          />
+          <Route index element={marketplacePage} />
           <Route
             path="dashboard"
             element={
               defaultAccount ? (
                 <DashboardPage chainId={chainId} />
               ) : (
-                <MarketplacePage
-                  defaultAccount={defaultAccount}
-                  connectWalletHandler={connectWalletHandler}
-                  chainId={chainId}
-                />
+                marketplacePage
               )
             }
           />
           <Route
             path="my-nft"
             element={
-              defaultAccount ? (
-                <MyNFTPage chainId={chainId} />
-              ) : (
-                <MarketplacePage
-                  defaultAccount={defaultAccount}
-                  connectWalletHandler={connectWalletHandler}
-                  chainId={chainId}
-                />
-              )
+              defaultAccount ? <MyNFTPage chainId={chainId} /> : marketplacePage
             }
           />
           <Route
@@ -121,11 +109,7 @@ function App() {
               defaultAccount ? (
                 <MintNFTPage chainId={chainId} />
               ) : (
-                <MarketplacePage
-                  defaultAccount={defaultAccount}
-                  connectWalletHandler={connectWalletHandler}
-                  chainId={chainId}
-                />
+                marketplacePage
               )
             }
           />
@@ -135,11 +119,7 @@ function App() {
               defaultAccount ? (
                 <ResellPage chainId={chainId} />
               ) : (
-                <MarketplacePage
-                  defaultAccount={defaultAccount}
-                  connectWalletHandler={connectWalletHandler}
-                  chainId={chainId}
-                />
+                marketplacePage
               )
             }
           />
@@ -150,31 +130,20 @@ function App() {
                 <WalletPage
                   defaultAccount={defaultAccount}
                   userBalance={userBalance}
-                  connectWalletHandler={connectWalletHandler}
                   chainId={chainId}
                   currency={currency}
                   chainName={chainName}
-                  setUserBalance={setUserBalance}
+                  getAccountBalance={getAccountBalance}
                 />
               ) : (
-                <MarketplacePage
-                  defaultAccount={defaultAccount}
-                  connectWalletHandler={connectWalletHandler}
-                />
+                marketplacePage
               )
             }
           />
           <Route
             path="networks"
             element={
-              defaultAccount ? (
-                <ChainsPage chains={chains} />
-              ) : (
-                <MarketplacePage
-                  defaultAccount={defaultAccount}
-                  connectWalletHandler={connectWalletHandler}
-                />
-              )
+              defaultAccount ? <ChainsPage chains={chains} /> : marketplacePage
             }
           />
         </Route>
