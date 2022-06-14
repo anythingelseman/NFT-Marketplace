@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import NFTMarketplace from "../artifacts/contracts/NFTMarketplace.sol/NFTMarketplace.json";
 import toast from "react-hot-toast";
@@ -9,6 +9,16 @@ const marketplaceAddress = "0xf6b66dc94404C127386fA3B4D9cb3430263Ea3F7";
 const MarketplacePage = (props) => {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
+  const [searchedNFT, setSearchedNFT] = useState(null);
+  const inputRef = useRef();
+
+  const searchHandler = () => {
+    const a = nfts.filter((nft) =>
+      nft.name.toLowerCase().includes(inputRef.current.value.toLowerCase())
+    );
+    setSearchedNFT(a);
+  };
+
   useEffect(() => {
     loadNFTs();
   }, []);
@@ -42,6 +52,7 @@ const MarketplacePage = (props) => {
       })
     );
     setNfts(items);
+    setSearchedNFT(items);
     setLoadingState(false);
   }
   async function buyNft(nft) {
@@ -115,8 +126,19 @@ const MarketplacePage = (props) => {
     );
   return (
     <div className="bg-gradient-to-br from-purple-800 to-purple-600 w-full">
+      <div className="flex mx-auto w-[400px] rounded-md bg-white">
+        <div className="text-black bg-white rounded-md p-2 font-bold text-md">
+          Search NFTs
+        </div>
+        <input
+          type="text"
+          ref={inputRef}
+          onChange={searchHandler}
+          className="p-2 text-black outline-none grow rounded-md"
+        />
+      </div>
       <div className="flex flex-wrap justify-around m-4 gap-x-3">
-        {nfts.map((nft, i) => (
+        {searchedNFT.map((nft, i) => (
           <div
             key={i}
             className="border shadow rounded-xl overflow-hidden bg-purple-900 w-[300px] h-[450px] mb-4"
