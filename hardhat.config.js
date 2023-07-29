@@ -14,12 +14,12 @@ module.exports = {
     mumbai: {
       url: "https://polygon-mumbai.g.alchemy.com/v2/FaVhw7acfd6XMPRyTL3SKXrPauzAkksF",
       accounts: [
-        "51e733b708c6fd2df54c1d29ff3bda2c059320cf1807776454d2efceae5df9a8",
+        "8c2771b8899527c673d73f3e8bbf8bd7144a3f509e4cd1448a6b0b09d1707f14",
       ],
       matic: {
         url: "https://polygon-mumbai.g.alchemy.com/v2/FaVhw7acfd6XMPRyTL3SKXrPauzAkksF",
         accounts: [
-          "51e733b708c6fd2df54c1d29ff3bda2c059320cf1807776454d2efceae5df9a8",
+          "8c2771b8899527c673d73f3e8bbf8bd7144a3f509e4cd1448a6b0b09d1707f14",
         ],
       },
     },

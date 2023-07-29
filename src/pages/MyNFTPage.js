@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NFTMarketplace from "../artifacts/contracts/NFTMarketplace.sol/NFTMarketplace.json";
-const marketplaceAddress = "0xf6b66dc94404C127386fA3B4D9cb3430263Ea3F7";
+const marketplaceAddress = "0x358d95F5EAb6Ea0D89bfadF62889c7eF542d6c41";
 
 const MyNFTPage = (props) => {
   const navigate = useNavigate();
